@@ -2,39 +2,48 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "ahmed277/python-devsecops"
-        VERSION = "v1"
+        IMAGE_NAME = "ahmed277/python-devsecops:v1"
     }
 
     stages {
-
-        stage('Clone Repository') {
+        stage('Checkout SCM') {
             steps {
-                git branch: 'main', url: 'https://github.com/ahmedessam1197/DevSecOps-Python-Microservices-Platform.git'            }
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: 'main']], 
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/ahmedessam1197/DevSecOps-Python-Microservices-Platform.git',
+                        credentialsId: 'Docker' 
+                    ]]
+                ])
+            }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE:$VERSION -f Docker/Dockerfile .'
+                script {
+                    docker.build(IMAGE_NAME, '-f Docker/Dockerfile .')
+                }
             }
         }
 
         stage('Trivy Security Scan') {
             steps {
-                sh 'trivy image $DOCKER_IMAGE:$VERSION'
+                script {
+                    sh """
+                        docker run --rm \
+                        -v /var/run/docker.sock:/var/run/docker.sock \
+                        aquasec/trivy:latest image ${IMAGE_NAME}
+                    """
+                }
             }
         }
 
         stage('Push Image') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub',
-                    usernameVariable: 'USER',
-                    passwordVariable: 'PASS'
-                )]) {
-
-                    sh 'echo $PASS | docker login -u $USER --password-stdin'
-                    sh 'docker push $DOCKER_IMAGE:$VERSION'
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-credentials-id') {
+                        docker.image(IMAGE_NAME).push('latest')
+                    }
                 }
             }
         }
@@ -44,6 +53,14 @@ pipeline {
                 sh 'kubectl apply -f k8s/'
             }
         }
+    }
 
+    post {
+        success {
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed!"
+        }
     }
 }
