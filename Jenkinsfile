@@ -11,8 +11,7 @@ pipeline {
                 checkout([$class: 'GitSCM', 
                     branches: [[name: 'main']], 
                     userRemoteConfigs: [[
-                        url: 'https://github.com/ahmedessam1197/DevSecOps-Python-Microservices-Platform.git',
-                        credentialsId: 'docker-credentials-id' 
+                        url: 'https://github.com/ahmedessam1197/DevSecOps-Python-Microservices-Platform.git'
                     ]]
                 ])
             }
@@ -41,7 +40,7 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-credentials-id') {
+                    docker.withRegistry('https://index.docker.io/v1/') {
                         docker.image(IMAGE_NAME).push('latest')
                     }
                 }
