@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('Trivy Security Scan') {
+                stage('Trivy Security Scan') {
             steps {
                 script {
                     sh """
