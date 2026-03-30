@@ -10,13 +10,12 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                git ''
-            }
+                git branch: 'main', url: 'https://github.com/ahmedessam1197/DevSecOps-Python-Microservices-Platform.git'            }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE:$VERSION .'
+                sh 'docker build -t $DOCKER_IMAGE:$VERSION -f Docker/Dockerfile .'
             }
         }
 
@@ -34,7 +33,7 @@ pipeline {
                     passwordVariable: 'PASS'
                 )]) {
 
-                    sh 'docker login -u $USER -p $PASS'
+                    sh 'echo $PASS | docker login -u $USER --password-stdin'
                     sh 'docker push $DOCKER_IMAGE:$VERSION'
                 }
             }
