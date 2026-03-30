@@ -6,17 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout SCM') {
-            steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: 'main']], 
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/ahmedessam1197/DevSecOps-Python-Microservices-Platform.git'
-                    ]]
-                ])
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
@@ -25,7 +14,7 @@ pipeline {
             }
         }
 
-                stage('Trivy Security Scan') {
+        stage('Trivy Security Scan') {
             steps {
                 script {
                     sh """
@@ -38,9 +27,13 @@ pipeline {
         }
 
         stage('Push Image') {
+
             steps {
+
                 script {
+
                     docker.withRegistry('https://index.docker.io/v1/') {
+
                         docker.image(IMAGE_NAME).push('latest')
                     }
                 }
@@ -48,7 +41,9 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
+
             steps {
+
                 sh 'kubectl apply -f Kubernetes/'
             }
         }
