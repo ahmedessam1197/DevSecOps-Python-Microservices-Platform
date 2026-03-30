@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-devsecops-mysql
+  namespace: python-devsecops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-devsecops-mysql
+  template:
+    metadata:
+      labels:
+        app: python-devsecops-mysql
+    spec:
+      containers:
+      - name: python-devsecops-mysql
+        image: mysql:5.7
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_DATABASE
+          value: python-devsecops
+        ports:
+        - containerPort: 3306
