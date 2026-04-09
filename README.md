@@ -1,10 +1,10 @@
 # DevSecOps Pytho Microservices Platform
 
-This project demonstrates a complete DevSecOps pipeline for deploying a microservices-based application on Kubernetes.
-
-The platform integrates containerization, CI/CD automation, security scanning, and monitoring to simulate a real-world DevOps production environment.
-
-The application is built using Python and deployed using a modern cloud-native architecture.
+• Developed a Python microservices platform with a focus on DevSecOps and secure software delivery.
+• Containerized services using Docker and deployed them on Kubernetes for scalable and resilient architecture.
+• Integrated automated security scanning (SAST/DAST) into the CI/CD pipeline to identify vulnerabilities early in the development lifecycle.
+• Built an end-to-end CI/CD pipeline to automate testing, security checks, and deployment.
+• Improved application reliability and security by enforcing best practices in service isolation, logging, and configuration management.
 
 # Project Architecture
 
