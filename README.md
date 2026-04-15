@@ -84,10 +84,3 @@ Access the application through Ingress
 • Security scanning
 • Kubernetes orchestration
 • Observability and monitoring
-
-# Future Improvements
-
-• Add Helm charts
-• Implement GitOps using ArgoCD
-• Add automated security policies
-• Integrate Kubernetes secrets management
